@@ -194,7 +194,7 @@ const Page1 = () => {
             <Link href={"/upload"}>
               <SquarePlus color="white" />
             </Link>
-            <Link href={"/profile"}>
+            <Link href={`/profile/${userId}`}>
               <User color="white" />
             </Link>
           </div>
