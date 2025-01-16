@@ -43,6 +43,7 @@ type DecodedToken = {
 
 const Page1 = () => {
   const [user, setUser] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const { userId } = useParams();
 
   const token = localStorage.getItem("token");
@@ -56,6 +57,7 @@ const Page1 = () => {
       );
       const data = await response.json();
       setUser(data);
+      setLoading(false);
     };
 
     fetchUser();
@@ -98,6 +100,25 @@ const Page1 = () => {
       console.log(result);
     }
   };
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
+
+  if (loading === true) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="relative flex items-center justify-center">
+          <div className="p-3 animate-spin drop-shadow-2xl bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 md:w-48 md:h-48 h-32 w-32 aspect-square rounded-full">
+            <div className="rounded-full h-full w-full bg-slate-100 dark:bg-zinc-900"></div>
+          </div>
+          <div className="absolute text-center text-black font-semibold">
+            Loading...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black h-full p-5 flex flex-col justify-between">
