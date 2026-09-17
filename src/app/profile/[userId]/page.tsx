@@ -46,9 +46,20 @@ const Page1 = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { userId } = useParams();
 
-  const token = localStorage.getItem("token");
-  const decodedToken: DecodedToken = jwtDecode(token ?? "");
-  const accountId = decodedToken.userId;
+  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    try {
+      setDecodedToken(
+        storedToken ? jwtDecode<DecodedToken>(storedToken) : null
+      );
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  }, []);
+
+  const accountId = decodedToken?.userId;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -63,7 +74,7 @@ const Page1 = () => {
     fetchUser();
   }, [userId]);
 
-  const isUserfollowed = user?.followers?.includes(accountId);
+  const isUserfollowed = user?.followers?.includes(accountId ?? "");
 
   const handleFollow = async () => {
     if (isUserfollowed) {
