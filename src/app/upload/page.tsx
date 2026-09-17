@@ -4,6 +4,10 @@ import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { House, SquarePlus, User } from "lucide-react";
 
+type DecodedToken = {
+  userId: string;
+};
+
 const Upload = () => {
   const [images, setImages] = useState<FileList | null>(null);
   const [upld, setUpld] = useState<string[]>([]);
@@ -11,10 +15,10 @@ const Upload = () => {
   const [error, setError] = useState<string | null>(null);
   const [caption, setCaption] = useState<string>("");
   const token = localStorage.getItem("token");
-  let decodedToken: any = null;
+  let decodedToken: DecodedToken | null = null;
 
   try {
-    decodedToken = token ? jwtDecode(token) : null;
+    decodedToken = token ? jwtDecode<DecodedToken>(token) : null;
   } catch (error) {
     console.error("Invalid token", error);
   }
