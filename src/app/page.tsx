@@ -31,9 +31,23 @@ type DecodedToken = {
 const Page = () => {
   const [posts, setPosts] = useState<postType>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const token = localStorage.getItem("token");
-  const decodedToken: DecodedToken = jwtDecode(token ?? "");
-  const userId = decodedToken.userId;
+  const [token, setToken] = useState<string | null>(null);
+  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+    try {
+      setDecodedToken(
+        storedToken ? jwtDecode<DecodedToken>(storedToken) : null
+      );
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  }, []);
+
+  const userId = decodedToken?.userId;
+
   const getPosts = async () => {
     console.log(token);
     console.log("working");
@@ -52,9 +66,11 @@ const Page = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    getPosts();
-  }, []);
+    if (token) {
+      setLoading(true);
+      getPosts();
+    }
+  }, [token]);
 
   if (loading === true) {
     return (
