@@ -153,7 +153,7 @@ const Upload = () => {
           <Link href={"/upload"}>
             <SquarePlus color="white" />
           </Link>
-          <Link href={`/profile/${decodedToken.userId}`}>
+          <Link href={`/profile/${decodedToken?.userId}`}>
             <User color="white" />
           </Link>
         </div>
