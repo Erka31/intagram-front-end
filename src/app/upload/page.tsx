@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { House, SquarePlus, User } from "lucide-react";
@@ -14,14 +14,20 @@ const Upload = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [caption, setCaption] = useState<string>("");
-  const token = localStorage.getItem("token");
-  let decodedToken: DecodedToken | null = null;
+  const [token, setToken] = useState<string | null>(null);
+  const [decodedToken, setDecodedToken] = useState<DecodedToken | null>(null);
 
-  try {
-    decodedToken = token ? jwtDecode<DecodedToken>(token) : null;
-  } catch (error) {
-    console.error("Invalid token", error);
-  }
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+    try {
+      setDecodedToken(
+        storedToken ? jwtDecode<DecodedToken>(storedToken) : null
+      );
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  }, []);
 
   const up = async () => {
     if (!images) return;
